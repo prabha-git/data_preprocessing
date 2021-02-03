@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import feather
 
 url = 'https://en.wikipedia.org/wiki/COVID-19_pandemic_by_country_and_territory'
 
@@ -29,6 +30,9 @@ for row in rows:
             deaths.append(cells[1].text.strip().replace(',',''))
             recovered.append(cells[2].text.strip().replace(',',''))
             
-df = pd.DataFrame({"country":country,"cases":cases,"deaths":deaths,"recovered":recovered})
-print(df)
+data = pd.DataFrame({"country":country,"cases":cases,"deaths":deaths,"recovered":recovered})
+
+feather.write_dataframe(data,"../data/covid.ftr")
+
+
     
