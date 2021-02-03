@@ -1,6 +1,7 @@
 import pandas as pd
 import feather
 
+#reading unclean data
 data = pd.read_feather("../data/covid.ftr")
 
 col = ['cases','deaths','recovered']
