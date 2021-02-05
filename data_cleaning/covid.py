@@ -1,11 +1,15 @@
 import pandas as pd
 import feather
+import re
 
 #reading unclean data
 data = pd.read_feather("../data/covid.ftr")
 
+# Convert these column to int data type
 col = ['cases','deaths','recovered']
-
 data[col] = data[col].apply(lambda x: pd.to_numeric(x,errors='coerce').astype('Int64'),axis=0)
+
+# To remove the subscript text
+data['country'] = data['country'].apply(lambda x:re.sub(r'\[.*\]','',x))
 
 data.to_csv("test.csv")
