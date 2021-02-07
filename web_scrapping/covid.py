@@ -3,36 +3,38 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import feather
 
-url = 'https://en.wikipedia.org/wiki/COVID-19_pandemic_by_country_and_territory'
+def get_data():
 
-page = requests.get(url)
+    url = 'https://en.wikipedia.org/wiki/COVID-19_pandemic_by_country_and_territory'
+
+    page = requests.get(url)
 
 
-soup = BeautifulSoup(page.content,'html.parser')
+    soup = BeautifulSoup(page.content,'html.parser')
 
-table = soup.find(id='thetable').find('tbody')
+    table = soup.find(id='thetable').find('tbody')
 
-rows = table.find_all('tr')
+    rows = table.find_all('tr')
 
-country = []
-cases=[]
-deaths=[]
-recovered=[]
+    country = []
+    cases=[]
+    deaths=[]
+    recovered=[]
 
-for row in rows:
-    if len(row)== 12:
-        cells = row.find_all('td')
+    for row in rows:
+        if len(row)== 12:
+            cells = row.find_all('td')
         
-        if len(cells)>0:
-            header = row.find_all('th')[1]
-            country.append(header.text.strip())
-            cases.append(cells[0].text.strip().replace(',',''))
-            deaths.append(cells[1].text.strip().replace(',',''))
-            recovered.append(cells[2].text.strip().replace(',',''))
+            if len(cells)>0:
+                header = row.find_all('th')[1]
+                country.append(header.text.strip())
+                cases.append(cells[0].text.strip().replace(',',''))
+                deaths.append(cells[1].text.strip().replace(',',''))
+                recovered.append(cells[2].text.strip().replace(',',''))
             
-data = pd.DataFrame({"country":country,"cases":cases,"deaths":deaths,"recovered":recovered})
-
-feather.write_dataframe(data,"../data/covid.ftr")
+    data = pd.DataFrame({"country":country,"cases":cases,"deaths":deaths,"recovered":recovered})
+    
+    return data
 
 
     
